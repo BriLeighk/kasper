@@ -25,16 +25,17 @@ function App() {
     try {
       setSubmitStatus('Submitting...');
       
-      // Create form data
-      const formData = new FormData();
-      formData.append('email', email.trim());
-
       const response = await fetch(scriptUrl, {
         method: 'POST',
         mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email: email.trim() })
       });
 
+      // Since we're using no-cors, we won't get a readable response
+      // So we'll assume success if no error is thrown
       setSubmitStatus('Thanks for subscribing!');
       setEmail('');
       
