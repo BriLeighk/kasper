@@ -1,6 +1,49 @@
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
+  const [email, setEmail] = useState('');
+  const [submitStatus, setSubmitStatus] = useState('');
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setSubmitStatus('Please enter a valid email address');
+      return;
+    }
+
+    const scriptUrl = process.env.REACT_APP_GOOGLE_SCRIPT_URL;
+    if (!scriptUrl) {
+      console.error('Google Script URL not found');
+      setSubmitStatus('Configuration error. Please try again later.');
+      return;
+    }
+
+    try {
+      setSubmitStatus('Submitting...');
+      
+      // Create form data
+      const formData = new FormData();
+      formData.append('email', email.trim());
+
+      const response = await fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ email: email.trim() })
+      });
+
+      setSubmitStatus('Thanks for subscribing!');
+      setEmail('');
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setSubmitStatus('Something went wrong. Please try again.');
+    }
+  };
+
   return (
     <div className="App">
       <nav className="nav-bar">
@@ -58,6 +101,27 @@ function App() {
               </li>
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section id="newsletter" className="newsletter-section">
+        <div className="section-line"></div>
+        <h2>JOIN OUR NEWSLETTER</h2>
+        <div className="newsletter-content">
+          <p>Stay updated with our latest performances and events!</p>
+          <div className="email-signup">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className="email-input"
+            />
+            <button onClick={handleEmailSubmit} className="submit-btn">
+              Subscribe
+            </button>
+          </div>
+          {submitStatus && <p className="submit-status">{submitStatus}</p>}
         </div>
       </section>
 
