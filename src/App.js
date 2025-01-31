@@ -128,7 +128,7 @@ function App() {
 
       <section id="contact" className="contact-section">
         <div className="section-line"></div>
-        <h2>JOIN THE MOVEMENT</h2>
+        <h2>CONTACT US</h2>
         <div className="contact-content">
           <p>Connect with us if you have any questions</p>
           <div className="social-links">
